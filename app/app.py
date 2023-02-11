@@ -6,6 +6,7 @@ from starlette.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from fastapi.middleware.cors import CORSMiddleware
 from keycloak import KeycloakOpenID, KeycloakInvalidTokenError
+from helper import log
 
 description = """
 ### 🚀 EdgyStack KeyCloak Driven API.  🔐
@@ -31,6 +32,9 @@ keycloak_oid = KeycloakOpenID(
 )
 
 async def verify_token(x_token: str | None = Header(default=None)) -> (Exception| dict[str, str]):
+    log('-----USER----')
+    log(keycloak_oid.userinfo(x_token))
+    log('-------------')
     valid = keycloak_oid.introspect(x_token)
     if valid['active']:
         return valid
@@ -83,14 +87,14 @@ async def health_check():
 
 @app.get("/admin")
 async def admin(token: dict = Depends(verify_token)): 
-    print(token)
+    log(token)
     return f'Hi premium user {token["preferred_username"]}'
 
 @app.get("/user/roles")
 async def user_roles(token: dict = Depends(verify_token)):
-    return f"{token['realm_access']['roles']}"
+    return token['realm_access']['roles']
 
 @app.get("/user")
 async def user_(user: dict = Depends(verify_user)):
-    return f"{user}"
+    return user
 

@@ -2,14 +2,14 @@
 import React, { useContext } from 'react';
 import { AuthContext } from '../helpers/AuthContextProvider';
 
-const Home: React.FC = () => {
+const HomePage: React.FC = () => {
     const authContext = useContext(AuthContext);
-    console.log(authContext.keycloak.token)
+    console.log('👋')
     return (
-        <div>
-            <h1 className="text-green-800 text-4xl">Welcome {authContext?.profile?.username || 'Guest'}</h1>
-        </div>
+        <main>
+            <h1 className="text-green-800 text-4xl">👋 {authContext?.profile?.username || 'Guest'}</h1>
+        </main>
     );
 };
 
-export default Home;
+export default HomePage;

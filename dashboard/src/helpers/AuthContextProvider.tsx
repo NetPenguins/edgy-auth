@@ -14,12 +14,12 @@ const keycloakConfig: KeycloakConfig = {
  * KeycloakInitOptions configures the Keycloak client.
  */
 const keycloakInitOptions: KeycloakInitOptions = {
-  // Configure that Keycloak will check if a user is already authenticated (when opening the app or reloading the page). If not authenticated the user will be send to the login form. If already authenticated the webapp will open.
-  onLoad: "login-required",
+  // Configure that Keycloak will check if a user is already authenticated (when opening the app or reloading the page). If not authenticated the user will be sent to the login form. If already authenticated the webapp will open.
+  // onLoad: "login-required",
 };
 
 // Create the Keycloak client instance
-const keycloak = Keycloak(keycloakConfig);
+export const keycloak = Keycloak(keycloakConfig);
 
 /**
  * AuthContextValues defines the structure for the default values of the {@link AuthContext}.
@@ -106,7 +106,7 @@ const AuthContextProvider = (props: AuthContextProviderProps) => {
         );
 
         // If the authentication was not successfull the user is send back to the Keycloak login form
-        if (!isAuthenticatedResponse) {
+        if (!isAuthenticatedResponse && keycloakInitOptions.onLoad === 'login-required') {
           console.log(
             "user is not yet authenticated. forwarding user to login."
           );
@@ -118,6 +118,7 @@ const AuthContextProvider = (props: AuthContextProviderProps) => {
       } catch  {
         console.log("error initializing Keycloak");
         setAuthenticated(false);
+        console.log("👽 go home")
       }
     }
 

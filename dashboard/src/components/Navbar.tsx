@@ -19,7 +19,7 @@ import ListItemText from '@mui/material/ListItemText';
 import { Login, Logout } from '@mui/icons-material';
 import { IRoute, Routes } from '../helpers/router/config';
 import { AuthContext } from '../helpers/AuthContextProvider';
-
+import { Link } from 'react-router-dom';
 const drawerWidth = 240;
 
 interface AppBarProps extends MuiAppBarProps {
@@ -92,8 +92,7 @@ interface AppBarProps extends MuiAppBarProps {
 
 
 
-const Navbar = (routes: any) => {  
-    console.debug(routes);
+const Navbar = () => {  
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
     const authContext = React.useContext(AuthContext);
@@ -132,30 +131,31 @@ const Navbar = (routes: any) => {
                     </IconButton>
                 </DrawerHeader>
                 <List>
-                    {Routes.map((route: IRoute) => {
+                    {Routes(authContext.profile).map((route: IRoute) => {
                         return (
                             <>
                                 {route.divider && <Divider key={`${route.title}-divider`}/>}
                                 <ListItem key={route.title} disablePadding sx={{ display: 'block' }}>
-                                    <ListItemButton
-                                        sx={{
-                                            minHeight: 48,
-                                            justifyContent: open ? 'initial' : 'center',
-                                            px: 2.5,
-                                        }}
-                                        href={route.path}
-                                    >
-                                        <ListItemIcon
+                                    <Link to={route.path}>
+                                        <ListItemButton
                                             sx={{
-                                                minWidth: 0,
-                                                mr: open ? 3 : 'auto',
-                                                justifyContent: 'center',
+                                                minHeight: 48,
+                                                justifyContent: open ? 'initial' : 'center',
+                                                px: 2.5,
                                             }}
                                         >
-                                            {route.icon}
-                                        </ListItemIcon>
-                                        <ListItemText primary={route.title} sx={{ opacity: open ? 1 : 0 }} />
-                                    </ListItemButton>
+                                            <ListItemIcon
+                                                sx={{
+                                                    minWidth: 0,
+                                                    mr: open ? 3 : 'auto',
+                                                    justifyContent: 'center',
+                                                }}
+                                            >
+                                                {route.icon}
+                                            </ListItemIcon>
+                                            <ListItemText primary={route.title} sx={{ opacity: open ? 1 : 0 }} />
+                                        </ListItemButton>
+                                    </Link>
                                 </ListItem>
                             </>
                         )
@@ -168,11 +168,6 @@ const Navbar = (routes: any) => {
                                 px: 2.5,
                             }}
                             onClick={() => {
-                                // if (keycloak.authenticated)
-                                //     keycloak.logout();
-
-                                // else
-                                //     keycloak.login();
                                 if (authContext.isAuthenticated)
                                     authContext.logout()
                                 else
@@ -191,78 +186,6 @@ const Navbar = (routes: any) => {
                             <ListItemText primary={!!authContext.isAuthenticated ? 'Logout' : 'Login'} sx={{ opacity: open ? 1 : 0 }} />
                         </ListItemButton>
                     </ListItem>
-                    {/* <ListItem key='UserProfile' disablePadding sx={{ display: 'block' }}>
-
-                        <ListItemButton
-                            sx={{
-                                minHeight: 48,
-                                justifyContent: open ? 'initial' : 'center',
-                                px: 2.5,
-                            }}
-                            href='/secured'
-                        >
-                            <ListItemIcon
-                                sx={{
-                                    minWidth: 0,
-                                    mr: open ? 3 : 'auto',
-                                    justifyContent: 'center',
-                                }}
-                            >
-                                <SupervisedUserCircle />
-                            </ListItemIcon>
-                            <ListItemText primary='User Profile' sx={{ opacity: open ? 1 : 0 }} />
-                        </ListItemButton>
-                    </ListItem> */}
-
-                    {/*  */}
-                    {/* <ListItem key='UserProfile' disablePadding sx={{ display: 'block' }}>
-                        <ListItemButton
-                            sx={{
-                                minHeight: 48,
-                                justifyContent: open ? 'initial' : 'center',
-                                px: 2.5,
-                            }}
-                            href='/secured'
-                        >
-                            <ListItemIcon
-                                sx={{
-                                    minWidth: 0,
-                                    mr: open ? 3 : 'auto',
-                                    justifyContent: 'center',
-                                }}
-                            >
-                                <SupervisedUserCircle />
-                            </ListItemIcon>
-                            <ListItemText primary='User Profile' sx={{ opacity: open ? 1 : 0 }} />
-                        </ListItemButton>
-                    </ListItem>
-                    <ListItem key='Login/Logout' disablePadding sx={{ display: 'block' }}>
-                        <ListItemButton
-                            sx={{
-                                minHeight: 48,
-                                justifyContent: open ? 'initial' : 'center',
-                                px: 2.5,
-                            }}
-                            onClick={() => {
-                                if (keycloak.authenticated)
-                                    keycloak.logout();
-
-                                else
-                                    keycloak.login();
-                            } }
-                        >
-                            <ListItemIcon
-                                sx={{
-                                    minWidth: 0,
-                                    mr: open ? 3 : 'auto',
-                                    justifyContent: 'center',
-                                }}
-                            >
-                                {!!keycloak.authenticated ? (<Logout />) : (<Login />)}
-                            </ListItemIcon>
-                            <ListItemText primary={!!keycloak.authenticated ? 'Logout' : 'Login'} sx={{ opacity: open ? 1 : 0 }} />
-                        </ListItemButton>
-                    </ListItem> */}
                 </List>
             </Drawer>
         </>
